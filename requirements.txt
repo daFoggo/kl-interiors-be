@@ -1,0 +1,10 @@
+fastapi[standard]
+sqlalchemy
+psycopg2-binary
+pydantic
+pydantic-settings
+passlib[bcrypt]
+pyjwt
+pytest
+httpx
+pytest-asyncio
