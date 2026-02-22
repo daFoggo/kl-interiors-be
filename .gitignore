@@ -23,3 +23,9 @@ __pycache__/
 # Docker
 .dockerignore
 docker-compose.override.yml
+
+# Testing & Cache
+.pytest_cache/
+test.db
+test_out.txt
+test_err.txt
