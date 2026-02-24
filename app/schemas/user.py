@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, ConfigDict, Field
+from pydantic import BaseModel, EmailStr, ConfigDict, Field, model_validator
 from typing import Optional
 from datetime import datetime
 from uuid import UUID
@@ -9,8 +9,7 @@ class RoleEnum(str, Enum):
     CUSTOMER = "CUSTOMER"
 
 class UserBase(BaseModel):
-    username: str
-    email: EmailStr
+    email: Optional[EmailStr] = None
     full_name: str
     phone_number: Optional[str] = None
     avatar_url: Optional[str] = None
@@ -19,6 +18,12 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(min_length=6)
+    
+    @model_validator(mode='after')
+    def check_email_or_phone(self) -> 'UserCreate':
+        if not self.email and not self.phone_number:
+            raise ValueError('Either email or phone number is required')
+        return self
 
 class UserResponse(UserBase):
     id: UUID

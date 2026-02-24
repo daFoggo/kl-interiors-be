@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.routers import health, users, auth, categories, products, bookmarks
 from app.database import engine, Base
 
@@ -10,6 +11,15 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="KL Interiors API", lifespan=lifespan)
+
+# Setup CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Include Routers
 app.include_router(health.router)

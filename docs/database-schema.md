@@ -14,8 +14,8 @@ erDiagram
 
     USERS {
         uuid id PK
-        string username UK
-        string email UK
+        string email UK "nullable"
+        string phone_number UK "nullable"
         string password_hash
         string full_name
         string phone_number
@@ -79,11 +79,10 @@ Stores authentication and profile information for users (Customer, Admin).
 | Column          | Type      | Constraints                  | Description                     |
 | :-------------- | :-------- | :--------------------------- | :------------------------------ |
 | `id`            | UUID      | PK                           | Primary Key                     |
-| `username`      | VARCHAR   | UNIQUE, NOT NULL             | Login username                  |
-| `email`         | VARCHAR   | UNIQUE, NOT NULL             | User's email address            |
+| `email`         | VARCHAR   | UNIQUE, NULL                 | User's email address            |
 | `password_hash` | VARCHAR   | NOT NULL                     | Encrypted password (Bcrypt)     |
 | `full_name`     | VARCHAR   | NOT NULL                     | User's full name                |
-| `phone_number`  | VARCHAR   | NULL                         | Contact phone number            |
+| `phone_number`  | VARCHAR   | UNIQUE, NULL                 | Contact phone number            |
 | `avatar_url`    | VARCHAR   | NULL                         | Avatar image URL                |
 | `role`          | VARCHAR   | NOT NULL, DEFAULT 'CUSTOMER' | Role: `ADMIN`, `CUSTOMER`       |
 | `is_active`     | BOOLEAN   | DEFAULT TRUE                 | Account status (Active/Blocked) |
@@ -175,7 +174,7 @@ This schema strictly adheres to the PostgreSQL Database Design best practices ou
 ### 4.2. Integrity Constraints (Section 5.2)
 
 - **Primary Keys**: The system forces UUIDs on all tables enforcing unbreakable identity parameters (preventing trivial ID-guessing vulnerabilities).
-- **Uniqueness**: Enforcing hard `UNIQUE` constraints upon identity drivers like `users.username`, `users.email`, and critical URI paths like `slug` properties.
+- **Uniqueness**: Enforcing hard `UNIQUE` constraints upon identity drivers like `users.email`, `users.phone_number`, and critical URI paths like `slug` properties.
 - **Relational Cascading**: Leveraging PostgreSQL `CASCADE` behaviors cleanly onto associative tables like `product_images` (`FK -> products(id), CASCADE`) and `bookmarks` ensuring safe metadata lifecycle destruction (preventing dangling data orphans).
 
 ### 4.3. Indexing Strategy (Section 5.3)

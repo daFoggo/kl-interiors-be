@@ -16,7 +16,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Se
     )
     
     payload = auth.decode_access_token(token)
-    if payload is None:
+    if payload is None or payload.get("type") != "access":
         raise credentials_exception
         
     user_id_str: str = payload.get("sub")

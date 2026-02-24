@@ -49,7 +49,6 @@ from app.auth import get_password_hash
 @pytest.fixture
 def admin_token(client, db_session):
     user = User(
-        username="adminuser",
         email="admin@test.com",
         password_hash=get_password_hash("password"),
         full_name="Admin User",
@@ -58,13 +57,12 @@ def admin_token(client, db_session):
     db_session.add(user)
     db_session.commit()
     
-    res = client.post("/auth/login", data={"username": "adminuser", "password": "password"})
+    res = client.post("/auth/login", data={"username": "admin@test.com", "password": "password"})
     return res.json()["access_token"]
 
 @pytest.fixture
 def customer_token(client, db_session):
     user = User(
-        username="customeruser",
         email="customer@test.com",
         password_hash=get_password_hash("password"),
         full_name="Customer User",
@@ -73,5 +71,5 @@ def customer_token(client, db_session):
     db_session.add(user)
     db_session.commit()
     
-    res = client.post("/auth/login", data={"username": "customeruser", "password": "password"})
+    res = client.post("/auth/login", data={"username": "customer@test.com", "password": "password"})
     return res.json()["access_token"]
