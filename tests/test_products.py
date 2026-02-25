@@ -5,7 +5,7 @@ def test_create_product_admin(client, admin_token, db_session):
         json={"name": "Furniture", "slug": "furniture", "description": "All furniture"},
         headers={"Authorization": f"Bearer {admin_token}"}
     )
-    cat_id = cat_res.json()["id"]
+    cat_id = cat_res.json()["payload"]["id"]
 
     response = client.post(
         "/products/",
@@ -20,7 +20,7 @@ def test_create_product_admin(client, admin_token, db_session):
         headers={"Authorization": f"Bearer {admin_token}"}
     )
     assert response.status_code == 201
-    assert response.json()["name"] == "Luxury Sofa"
+    assert response.json()["payload"]["name"] == "Luxury Sofa"
 
 def test_create_product_customer(client, customer_token, db_session):
     response = client.post(
@@ -46,7 +46,7 @@ def test_update_product_admin(client, admin_token):
         json={"name": "Lighting", "slug": "lighting"},
         headers={"Authorization": f"Bearer {admin_token}"}
     )
-    cat_id = cat_res.json()["id"]
+    cat_id = cat_res.json()["payload"]["id"]
 
     prod_res = client.post(
         "/products/",
@@ -58,7 +58,7 @@ def test_update_product_admin(client, admin_token):
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
-    prod_id = prod_res.json()["id"]
+    prod_id = prod_res.json()["payload"]["id"]
 
     update_res = client.put(
         f"/products/{prod_id}",
@@ -72,7 +72,7 @@ def test_update_product_admin(client, admin_token):
         headers={"Authorization": f"Bearer {admin_token}"}
     )
     assert update_res.status_code == 200
-    assert update_res.json()["name"] == "Super Lamp"
+    assert update_res.json()["payload"]["name"] == "Super Lamp"
 
 def test_delete_product_admin(client, admin_token):
     cat_res = client.post(
@@ -80,7 +80,7 @@ def test_delete_product_admin(client, admin_token):
         json={"name": "Decor", "slug": "decor"},
         headers={"Authorization": f"Bearer {admin_token}"}
     )
-    cat_id = cat_res.json()["id"]
+    cat_id = cat_res.json()["payload"]["id"]
 
     prod_res = client.post(
         "/products/",
@@ -92,7 +92,7 @@ def test_delete_product_admin(client, admin_token):
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
-    prod_id = prod_res.json()["id"]
+    prod_id = prod_res.json()["payload"]["id"]
 
     del_res = client.delete(
         f"/products/{prod_id}",

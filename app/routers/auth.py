@@ -8,7 +8,7 @@ from app.database import get_db
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-@router.post("/login", response_model=schemas.Token)
+@router.post("/login", response_model=schemas.ApiResponse[schemas.Token])
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
@@ -44,9 +44,10 @@ def login_for_access_token(
         expires_delta=refresh_token_expires
     )
     
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+    token = schemas.Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer")
+    return schemas.ApiResponse(success=True, payload=token)
 
-@router.post("/refresh", response_model=schemas.Token)
+@router.post("/refresh", response_model=schemas.ApiResponse[schemas.Token])
 def refresh_access_token(
     refresh_request: schemas.TokenRefreshRequest,
     db: Session = Depends(get_db)
@@ -87,4 +88,5 @@ def refresh_access_token(
         expires_delta=refresh_token_expires
     )
     
-    return {"access_token": new_access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}
+    token = schemas.Token(access_token=new_access_token, refresh_token=new_refresh_token, token_type="bearer")
+    return schemas.ApiResponse(success=True, payload=token)

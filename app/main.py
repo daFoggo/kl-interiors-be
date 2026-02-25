@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_pagination import add_pagination
 from app.routers import health, users, auth, categories, products, bookmarks
 from app.database import engine, Base
 
@@ -29,6 +30,9 @@ app.include_router(categories.router)
 app.include_router(products.router)
 app.include_router(bookmarks.router)
 
+# Add pagination support
+add_pagination(app)
+
 @app.get("/")
 async def root():
-    return {"message": "KL Interiors API is running!"}
+    return {"success": True, "payload": {"data": {"message": "KL Interiors API is running!"}}}

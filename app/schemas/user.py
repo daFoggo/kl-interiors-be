@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, ConfigDict, Field, model_validator
+from pydantic import BaseModel, EmailStr, ConfigDict, Field, model_validator, field_validator
 from typing import Optional
 from datetime import datetime
 from uuid import UUID
@@ -13,6 +13,13 @@ class UserBase(BaseModel):
     full_name: str
     phone_number: Optional[str] = None
     avatar_url: Optional[str] = None
+
+    @field_validator('email', 'phone_number', mode='before')
+    @classmethod
+    def empty_string_to_none(cls, v):
+        if v == "":
+            return None
+        return v
 
     model_config = ConfigDict(from_attributes=True)
 

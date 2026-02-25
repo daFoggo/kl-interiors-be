@@ -5,7 +5,7 @@ def test_add_bookmark(client, admin_token, customer_token):
         json={"name": "Chairs", "slug": "chairs"},
         headers={"Authorization": f"Bearer {admin_token}"}
     )
-    cat_id = cat_res.json()["id"]
+    cat_id = cat_res.json()["payload"]["id"]
 
     prod_res = client.post(
         "/products/",
@@ -17,7 +17,7 @@ def test_add_bookmark(client, admin_token, customer_token):
         },
         headers={"Authorization": f"Bearer {admin_token}"}
     )
-    prod_id = prod_res.json()["id"]
+    prod_id = prod_res.json()["payload"]["id"]
 
     # Customer bookmarks the product
     bm_res = client.post(
@@ -33,8 +33,9 @@ def test_add_bookmark(client, admin_token, customer_token):
         headers={"Authorization": f"Bearer {customer_token}"}
     )
     assert get_res.status_code == 200
-    assert len(get_res.json()) > 0
-    assert get_res.json()[0]["product_id"] == prod_id
+    data = get_res.json()["payload"]["data"]
+    assert len(data) > 0
+    assert data[0]["product_id"] == prod_id
 
     # Duplicate bookmark should fail
     bm_res2 = client.post(
@@ -51,14 +52,14 @@ def test_delete_bookmark(client, admin_token, customer_token):
         json={"name": "Kitchen", "slug": "kitchen"},
         headers={"Authorization": f"Bearer {admin_token}"}
     )
-    cat_id = cat_res.json()["id"]
+    cat_id = cat_res.json()["payload"]["id"]
 
     prod_res = client.post(
         "/products/",
         json={"category_id": cat_id, "name": "Island", "slug": "island", "price": 500},
         headers={"Authorization": f"Bearer {admin_token}"}
     )
-    prod_id = prod_res.json()["id"]
+    prod_id = prod_res.json()["payload"]["id"]
 
     # Bookmark it
     bm_res = client.post(
@@ -66,7 +67,7 @@ def test_delete_bookmark(client, admin_token, customer_token):
         json={"product_id": prod_id},
         headers={"Authorization": f"Bearer {customer_token}"}
     )
-    bm_id = bm_res.json()["id"]
+    bm_id = bm_res.json()["payload"]["id"]
 
     # Delete it
     del_res = client.delete(
@@ -80,4 +81,4 @@ def test_delete_bookmark(client, admin_token, customer_token):
         "/bookmarks/",
         headers={"Authorization": f"Bearer {customer_token}"}
     )
-    assert len(get_res.json()) == 0
+    assert len(get_res.json()["payload"]["data"]) == 0

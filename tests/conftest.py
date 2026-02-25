@@ -58,7 +58,7 @@ def admin_token(client, db_session):
     db_session.commit()
     
     res = client.post("/auth/login", data={"username": "admin@test.com", "password": "password"})
-    return res.json()["access_token"]
+    return res.json()["payload"]["access_token"]
 
 @pytest.fixture
 def customer_token(client, db_session):
@@ -72,4 +72,4 @@ def customer_token(client, db_session):
     db_session.commit()
     
     res = client.post("/auth/login", data={"username": "customer@test.com", "password": "password"})
-    return res.json()["access_token"]
+    return res.json()["payload"]["access_token"]

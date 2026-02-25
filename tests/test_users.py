@@ -8,7 +8,7 @@ def test_register_user(client):
         },
     )
     assert response.status_code == 201, response.text
-    data = response.json()
+    data = response.json()["payload"]
     assert data["email"] == "test@test.com"
     assert "id" in data
     assert data["role"] == "CUSTOMER"
@@ -33,7 +33,7 @@ def test_login_user(client):
         },
     )
     assert response.status_code == 200, response.text
-    data = response.json()
+    data = response.json()["payload"]
     assert "access_token" in data
     assert "refresh_token" in data
     assert data["token_type"] == "bearer"
@@ -55,14 +55,14 @@ def test_read_users_me(client):
             "password": "strongpassword123"
         },
     )
-    token = login_response.json()["access_token"]
+    token = login_response.json()["payload"]["access_token"]
     
     response = client.get(
         "/users/me",
         headers={"Authorization": f"Bearer {token}"}
     )
     assert response.status_code == 200, response.text
-    assert response.json()["email"] == "me@test.com"
+    assert response.json()["payload"]["email"] == "me@test.com"
 
 def test_unauthorized_access(client):
     response = client.get("/users/me")
@@ -78,7 +78,7 @@ def test_register_with_phone(client):
         },
     )
     assert response.status_code == 201, response.text
-    data = response.json()
+    data = response.json()["payload"]
     assert data["phone_number"] == "+84123456789"
     assert data["email"] is None
 
@@ -100,7 +100,7 @@ def test_login_with_phone(client):
         },
     )
     assert response.status_code == 200, response.text
-    assert "access_token" in response.json()
+    assert "access_token" in response.json()["payload"]
 
 def test_register_without_email_and_phone(client):
     response = client.post(
@@ -131,7 +131,7 @@ def test_refresh_token(client):
         },
     )
     assert login_response.status_code == 200
-    refresh_token = login_response.json()["refresh_token"]
+    refresh_token = login_response.json()["payload"]["refresh_token"]
     
     # Refresh the token
     refresh_response = client.post(
@@ -139,7 +139,7 @@ def test_refresh_token(client):
         json={"refresh_token": refresh_token}
     )
     assert refresh_response.status_code == 200
-    data = refresh_response.json()
+    data = refresh_response.json()["payload"]
     assert "access_token" in data
     assert "refresh_token" in data
     
