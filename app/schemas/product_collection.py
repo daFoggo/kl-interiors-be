@@ -3,18 +3,22 @@ from typing import Optional
 from datetime import datetime
 from uuid import UUID
 
-class CategoryBase(BaseModel):
+
+class ProductCollectionBase(BaseModel):
     name: str
-    slug: str
+    slug: Optional[str] = None
     description: Optional[str] = None
-    parent_id: Optional[UUID] = None
+    image_url: Optional[str] = None
+    is_featured: bool = False
 
     model_config = ConfigDict(from_attributes=True)
 
-class CategoryCreate(CategoryBase):
+
+class ProductCollectionCreate(ProductCollectionBase):
     pass
 
-class CategoryResponse(CategoryBase):
+
+class ProductCollectionResponse(ProductCollectionBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
