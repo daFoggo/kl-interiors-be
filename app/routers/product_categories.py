@@ -51,15 +51,15 @@ def get_popular_product_categories(
 ):
     product_count_subq = (
         select(
-            models.Product.category_id,
+            models.Product.product_category_id,
             func.count(models.Product.id).label("product_count"),
         )
-        .group_by(models.Product.category_id)
+        .group_by(models.Product.product_category_id)
         .subquery()
     )
     bookmark_count_subq = (
         select(
-            models.Product.category_id,
+            models.Product.product_category_id,
             func.count(models.Bookmark.id).label("bookmark_count"),
         )
         .join(
@@ -67,18 +67,18 @@ def get_popular_product_categories(
             models.Bookmark.product_id == models.Product.id,
             isouter=True,
         )
-        .group_by(models.Product.category_id)
+        .group_by(models.Product.product_category_id)
         .subquery()
     )
     results = (
         db.query(models.ProductCategory)
         .outerjoin(
             product_count_subq,
-            product_count_subq.c.category_id == models.ProductCategory.id,
+            product_count_subq.c.product_category_id == models.ProductCategory.id,
         )
         .outerjoin(
             bookmark_count_subq,
-            bookmark_count_subq.c.category_id == models.ProductCategory.id,
+            bookmark_count_subq.c.product_category_id == models.ProductCategory.id,
         )
         .order_by(
             (
@@ -125,7 +125,7 @@ def get_products_by_category(category_id: UUID, db: Session = Depends(get_db)):
     if not cat:
         raise HTTPException(status_code=404, detail="Product category not found")
     return paginate(
-        db, select(models.Product).where(models.Product.category_id == category_id)
+        db, select(models.Product).where(models.Product.product_category_id == category_id)
     )
 
 
