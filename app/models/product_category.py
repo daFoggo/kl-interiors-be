@@ -23,4 +23,4 @@ class ProductCategory(Base):
     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
 
     subcategories = relationship("ProductCategory", backref="parent", remote_side=[id])
-    products = relationship("Product", back_populates="category")
+    products = relationship("Product", back_populates="product_category")

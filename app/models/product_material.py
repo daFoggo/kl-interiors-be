@@ -32,5 +32,5 @@ class ProductMaterial(Base):
     image_url = Column(String, nullable=True)  # texture thumbnail
 
     products = relationship(
-        "Product", secondary="products_materials", back_populates="materials"
+        "Product", secondary="products_materials", back_populates="product_materials"
     )

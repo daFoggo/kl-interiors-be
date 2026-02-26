@@ -70,23 +70,23 @@ def create_product(
 
     if (
         not db.query(models.ProductCategory)
-        .filter(models.ProductCategory.id == product.category_id)
+        .filter(models.ProductCategory.id == product.product_category_id)
         .first()
     ):
         raise HTTPException(status_code=400, detail="Invalid category ID")
 
-    colors = _resolve_colors(db, product.color_ids)
-    materials = _resolve_materials(db, product.material_ids)
-    collections = _resolve_collections(db, product.collection_ids)
+    product_colors = _resolve_colors(db, product.product_color_ids)
+    product_materials = _resolve_materials(db, product.product_material_ids)
+    product_collections = _resolve_collections(db, product.product_collection_ids)
 
     product_data = product.model_dump(
-        exclude={"color_ids", "material_ids", "collection_ids"}
+        exclude={"product_color_ids", "product_material_ids", "product_collection_ids"}
     )
     product_data["slug"] = slug
     new_product = models.Product(**product_data)
-    new_product.colors = colors
-    new_product.materials = materials
-    new_product.collections = collections
+    new_product.product_colors = product_colors
+    new_product.product_materials = product_materials
+    new_product.product_collections = product_collections
 
     db.add(new_product)
     db.commit()
@@ -123,17 +123,22 @@ def update_product(
         raise HTTPException(status_code=404, detail="Product not found")
 
     update_data = product_update.model_dump(
-        exclude_unset=True, exclude={"color_ids", "material_ids"}
+        exclude_unset=True,
+        exclude={"product_color_ids", "product_material_ids", "product_collection_ids"},
     )
     for key, value in update_data.items():
         setattr(product, key, value)
 
-    if product_update.color_ids is not None:
-        product.colors = _resolve_colors(db, product_update.color_ids)
-    if product_update.material_ids is not None:
-        product.materials = _resolve_materials(db, product_update.material_ids)
-    if product_update.collection_ids is not None:
-        product.collections = _resolve_collections(db, product_update.collection_ids)
+    if product_update.product_color_ids is not None:
+        product.product_colors = _resolve_colors(db, product_update.product_color_ids)
+    if product_update.product_material_ids is not None:
+        product.product_materials = _resolve_materials(
+            db, product_update.product_material_ids
+        )
+    if product_update.product_collection_ids is not None:
+        product.product_collections = _resolve_collections(
+            db, product_update.product_collection_ids
+        )
 
     db.commit()
     db.refresh(product)

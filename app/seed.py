@@ -505,7 +505,7 @@ def seed():
             mat_names = ", ".join(p_d["materials"])
 
             new_prod = Product(
-                category_id=cat_id,
+                product_category_id=cat_id,
                 product_type_id=type_id,
                 name=p_d["name"],
                 slug=p_d["slug"],
@@ -520,8 +520,8 @@ def seed():
                 status=ProductStatusEnum.PUBLISHED.value,
                 is_featured=random.choice([True, False, False]),
                 dimensions="Vui lòng liên hệ để biết kích thước chi tiết",
-                colors=[color_objs[name] for name in p_d["colors"]],
-                materials=[mat_objs[name] for name in p_d["materials"]],
+                product_colors=[color_objs[name] for name in p_d["colors"]],
+                product_materials=[mat_objs[name] for name in p_d["materials"]],
             )
             db.add(new_prod)
             db.flush()
@@ -635,8 +635,8 @@ def seed():
     for col_slug, (col_obj, prod_slugs) in col_objs.items():
         for p_slug in prod_slugs:
             prod = db.query(Product).filter(Product.slug == p_slug).first()
-            if prod and col_obj not in prod.collections:
-                prod.collections.append(col_obj)
+            if prod and col_obj not in prod.product_collections:
+                prod.product_collections.append(col_obj)
     db.commit()
 
     print(f"Seed completed. Added {count} new products.")

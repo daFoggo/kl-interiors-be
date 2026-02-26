@@ -21,7 +21,7 @@ class Product(Base):
     __tablename__ = "products"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    category_id = Column(
+    product_category_id = Column(
         UUID(as_uuid=True),
         ForeignKey("product_categories.id"),
         nullable=False,
@@ -41,18 +41,18 @@ class Product(Base):
     created_at = Column(DateTime(timezone=True), default=utc_now)
     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
 
-    category = relationship("ProductCategory", back_populates="products")
+    product_category = relationship("ProductCategory", back_populates="products")
     product_type = relationship("ProductType", back_populates="products")
     images = relationship(
         "ProductImage", back_populates="product", cascade="all, delete-orphan"
     )
-    colors = relationship(
+    product_colors = relationship(
         "ProductColor", secondary="products_colors", back_populates="products"
     )
-    materials = relationship(
+    product_materials = relationship(
         "ProductMaterial", secondary="products_materials", back_populates="products"
     )
-    collections = relationship(
+    product_collections = relationship(
         "ProductCollection", secondary="products_collections", back_populates="products"
     )
     bookmarked_by = relationship(

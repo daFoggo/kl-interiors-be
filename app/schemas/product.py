@@ -51,23 +51,23 @@ class ProductBase(BaseModel):
 
 
 class ProductCreate(ProductBase):
-    category_id: UUID
-    color_ids: List[UUID] = []
-    material_ids: List[UUID] = []
-    collection_ids: List[UUID] = []
+    product_category_id: UUID
+    product_color_ids: List[UUID] = []
+    product_material_ids: List[UUID] = []
+    product_collection_ids: List[UUID] = []
 
 
 class ProductResponse(ProductBase):
     id: UUID
-    category_id: UUID
+    product_category_id: UUID
     created_at: datetime
     updated_at: datetime
     images: List[ProductImageResponse] = []
-    colors: List["ProductColorResponse"] = []
-    materials: List["ProductMaterialResponse"] = []
-    collections: List["ProductCollectionResponse"] = []
+    product_colors: List["ProductColorResponse"] = []
+    product_materials: List["ProductMaterialResponse"] = []
+    product_collections: List["ProductCollectionResponse"] = []
     product_type: Optional["ProductTypeResponse"] = None
-    category: Optional["ProductCategoryResponse"] = None
+    product_category: Optional["ProductCategoryResponse"] = None
 
 
 # Resolve forward refs

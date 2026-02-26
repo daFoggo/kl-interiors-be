@@ -32,5 +32,5 @@ class ProductColor(Base):
     hex_code = Column(String(7), nullable=True)  # e.g. "#5C3317"
 
     products = relationship(
-        "Product", secondary="products_colors", back_populates="colors"
+        "Product", secondary="products_colors", back_populates="product_colors"
     )

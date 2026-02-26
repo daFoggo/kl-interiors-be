@@ -38,5 +38,7 @@ class ProductCollection(Base):
     updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
 
     products = relationship(
-        "Product", secondary="products_collections", back_populates="collections"
+        "Product",
+        secondary="products_collections",
+        back_populates="product_collections",
     )
